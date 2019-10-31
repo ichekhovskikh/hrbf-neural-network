@@ -6,6 +6,6 @@ import kotlin.math.exp
 object Functions {
 
     @JvmStatic
-    internal fun gaussian(q: Matrix, radius: Matrix): Double =
-        exp(-((q * radius).trans() * (q * radius)).single())
+    internal fun gaussian(q: Matrix, distances: Matrix): Double =
+        exp(-((q * distances).trans() * (q * distances)).single())
 }

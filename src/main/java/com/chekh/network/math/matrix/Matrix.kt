@@ -13,25 +13,25 @@ internal data class Matrix(private var matrix: MutableList<MutableList<Double>>)
     }
 
     operator fun times(otherMatrix: Matrix): Matrix {
-        val result = MutableList(matrix.size) { MutableList(otherMatrix.matrix.first().size) { 0.0 } }
-        for (i in matrix.indices) {
-            for (j in otherMatrix.matrix.first().indices) {
-                for (k in otherMatrix.matrix.indices) {
-                    result[i][j] += matrix[i][k] * otherMatrix.matrix[k][j]
+        val result = Matrix(rowSize, otherMatrix.columnSize)
+        for (i in 0 until rowSize) {
+            for (j in 0 until otherMatrix.columnSize) {
+                for (k in 0 until otherMatrix.rowSize) {
+                    result[i, j] += this[i, k] * otherMatrix[k, j]
                 }
             }
         }
-        return Matrix(result)
+        return result
     }
 
     fun trans(): Matrix {
-        val result = MutableList(matrix.first().size) { MutableList(matrix.size) { 0.0 } }
-        for (i in matrix.indices) {
-            for (j in matrix.first().indices) {
-                result[j][i] = matrix[i][j]
+        val result = Matrix(columnSize, rowSize)
+        for (i in 0 until rowSize) {
+            for (j in 0 until columnSize) {
+                result[j, i] = this[i, j]
             }
         }
-        return Matrix(result)
+        return result
     }
 
     fun single() = matrix.first().first()
