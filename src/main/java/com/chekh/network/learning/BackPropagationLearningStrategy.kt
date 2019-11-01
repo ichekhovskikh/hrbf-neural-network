@@ -25,8 +25,8 @@ class BackPropagationLearningStrategy : HyperRadialBasisLearningStrategy {
         var iteration = 0.0
         errorDrawer?.clear()
         for (index in 0 until epoch) {
-            dataset.rows.forEach { data ->
-                val output = network.calculate(data.inputs)
+            dataset.rows.shuffled().forEach { data ->
+                val output = network.radialBasisLayer.calculate(data.inputs)
                 val error = output - data.output
                 correct(network, data.inputs, error, learningRate)
                 errorDrawer?.draw(Point(iteration++, error))

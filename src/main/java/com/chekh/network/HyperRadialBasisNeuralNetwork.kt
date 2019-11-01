@@ -1,6 +1,7 @@
 package com.chekh.network
 
 import com.chekh.network.dataset.Dataset
+import com.chekh.network.dataset.DatasetNormalizer
 import com.chekh.network.layer.HyperRadialBasisLayer
 import com.chekh.network.learning.HyperRadialBasisLearningStrategy
 import com.chekh.network.log.ChartDrawer
@@ -10,13 +11,13 @@ class HyperRadialBasisNeuralNetwork(
     override var inputSize: Int,
     var neuronSize: Int,
     var learningStrategy: HyperRadialBasisLearningStrategy,
+    var normalizer: DatasetNormalizer,
     var logger: Logger? = null,
     var errorDrawer: ChartDrawer? = null
     ) : NeuralNetwork {
 
     override val outputSize = OUTPUT_SIZE
     val radialBasisLayer = HyperRadialBasisLayer(inputSize, neuronSize)
-    private var hasInitialized = false
 
     override fun retrain(dataset: Dataset, epoch: Int, learningRate: Double) {
         init(dataset)
@@ -26,7 +27,7 @@ class HyperRadialBasisNeuralNetwork(
     override fun train(dataset: Dataset, epoch: Int, learningRate: Double) {
         initializeIfNeed(dataset)
         logger?.log("\nSTART TRAIN\n")
-        learningStrategy.train(this, dataset, epoch, learningRate, errorDrawer)
+        learningStrategy.train(this, normalizer.normalizedDataset!!, epoch, learningRate, errorDrawer)
     }
 
     override fun test(dataset: Dataset, accuracyDelta: Double): Float {
@@ -46,18 +47,20 @@ class HyperRadialBasisNeuralNetwork(
 
     override fun calculate(inputs: List<Double>): Double {
         require(inputs.size == inputSize)
-        return radialBasisLayer.calculate(inputs)
+        val normalizedInputs = normalizer.normalization(inputs)
+        val output = radialBasisLayer.calculate(normalizedInputs)
+        return normalizer.originalValue(output)
     }
 
     private fun initializeIfNeed(dataset: Dataset) {
-        if (!hasInitialized) {
+        if (normalizer.dataset == null) {
             init(dataset)
         }
     }
 
     private fun init(dataset: Dataset) {
-        radialBasisLayer.init(dataset)
-        hasInitialized = true
+        normalizer.dataset = dataset
+        radialBasisLayer.init(normalizer.normalizedDataset!!)
     }
 
     companion object {

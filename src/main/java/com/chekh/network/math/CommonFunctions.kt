@@ -7,5 +7,5 @@ object CommonFunctions {
 
     @JvmStatic
     internal fun gaussian(q: Matrix, distances: Matrix): Double =
-        exp(-((q * distances).trans() * (q * distances)).single())
+        exp(-0.5 * ((q * distances).trans() * (q * distances)).single())
 }

@@ -22,8 +22,10 @@ class HyperRadialBasisNeuron(var inputSize: Int) : Neuron {
     }
 
     private fun initDiagonalMatrix() {
-        for (index in 0 until inputSize) {
-            q[index, index] = 1.0
+        for (rowIndex in 0 until q.rowSize) {
+            for (columnIndex in 0 until q.columnSize) {
+                q[rowIndex, columnIndex] = if (rowIndex == columnIndex) 1.0 else 0.0
+            }
         }
     }
 
