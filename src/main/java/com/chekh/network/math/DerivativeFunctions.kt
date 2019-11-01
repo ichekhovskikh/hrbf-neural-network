@@ -36,7 +36,7 @@ object DerivativeFunctions {
         weight: Double,
         q: Matrix,
         distances: Matrix
-    ): Double = -exp(-0.5 * u(q, distances)) * weight * error * distances[0, rowIndex] * z(columnIndex, q, distances)
+    ): Double = -exp(-0.5 * u(q, distances)) * weight * error * distances[rowIndex, 0] * z(columnIndex, q, distances)
 
     @JvmStatic
     private fun u(q: Matrix, distances: Matrix): Double {
@@ -50,7 +50,7 @@ object DerivativeFunctions {
     @JvmStatic
     private fun z(index: Int, q: Matrix, distances: Matrix): Double {
         var sum = 0.0
-        distances.toList(rowIndex = 0).forEachIndexed { distanceIndex, distance ->
+        distances.toList(columnIndex = 0).forEachIndexed { distanceIndex, distance ->
             sum += distance * q[distanceIndex, index]
         }
         return sum

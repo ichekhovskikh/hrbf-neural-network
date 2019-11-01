@@ -3,6 +3,8 @@ package com.chekh.network.learning
 import com.chekh.network.HyperRadialBasisNeuralNetwork
 import com.chekh.network.dataset.Dataset
 import com.chekh.network.layer.HyperRadialBasisLayer
+import com.chekh.network.log.ChartDrawer
+import com.chekh.network.log.Point
 import com.chekh.network.math.DerivativeFunctions.derivativeBias
 import com.chekh.network.math.DerivativeFunctions.derivativeCenter
 import com.chekh.network.math.DerivativeFunctions.derivativeQ
@@ -13,12 +15,21 @@ import com.chekh.network.neuron.HyperRadialBasisNeuron
 
 class BackPropagationLearningStrategy : HyperRadialBasisLearningStrategy {
 
-    override fun train(network: HyperRadialBasisNeuralNetwork, dataset: Dataset, epoch: Int, learningRate: Double) {
+    override fun train(
+        network: HyperRadialBasisNeuralNetwork,
+        dataset: Dataset,
+        epoch: Int,
+        learningRate: Double,
+        errorDrawer: ChartDrawer?
+    ) {
+        var iteration = 0.0
+        errorDrawer?.clear()
         for (index in 0 until epoch) {
             dataset.rows.forEach { data ->
                 val output = network.calculate(data.inputs)
                 val error = output - data.output
                 correct(network, data.inputs, error, learningRate)
+                errorDrawer?.draw(Point(iteration++, error))
             }
         }
     }

@@ -46,11 +46,11 @@ data class Matrix(private var matrix: MutableList<MutableList<Double>>) {
 
     fun single() = matrix.first().first()
 
-    fun toList(rowIndex: Int) = matrix[rowIndex]
+    fun toList(columnIndex: Int) = matrix.map { it[columnIndex] }
 
     fun toList() = matrix
 
     companion object {
-        fun List<Double>.toMatrix() = Matrix(MutableList(1) { this.toMutableList() })
+        fun List<Double>.toMatrix() = Matrix(MutableList(size) { row -> MutableList(1) { this[row]} })
     }
 }

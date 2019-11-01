@@ -3,12 +3,16 @@ package com.chekh.network
 import com.chekh.network.dataset.Dataset
 import com.chekh.network.layer.HyperRadialBasisLayer
 import com.chekh.network.learning.HyperRadialBasisLearningStrategy
+import com.chekh.network.log.ChartDrawer
+import com.chekh.network.log.Logger
 
 class HyperRadialBasisNeuralNetwork(
     override var inputSize: Int,
     var neuronSize: Int,
-    var learningStrategy: HyperRadialBasisLearningStrategy
-) : NeuralNetwork {
+    var learningStrategy: HyperRadialBasisLearningStrategy,
+    var logger: Logger? = null,
+    var errorDrawer: ChartDrawer? = null
+    ) : NeuralNetwork {
 
     override val outputSize = OUTPUT_SIZE
     val radialBasisLayer = HyperRadialBasisLayer(inputSize, neuronSize)
@@ -21,17 +25,22 @@ class HyperRadialBasisNeuralNetwork(
 
     override fun train(dataset: Dataset, epoch: Int, learningRate: Double) {
         initializeIfNeed(dataset)
-        learningStrategy.train(this, dataset, epoch, learningRate)
+        logger?.log("\nSTART TRAIN\n")
+        learningStrategy.train(this, dataset, epoch, learningRate, errorDrawer)
     }
 
     override fun test(dataset: Dataset, accuracyDelta: Double): Float {
         var errors = 0
+        logger?.log("\nSTART TESTING")
         dataset.rows.forEach { row ->
+            logger?.log("\n$row")
             val output = calculate(row.inputs)
             if (output !in (row.output - accuracyDelta)..(row.output + accuracyDelta)) {
                 errors++
             }
+            logger?.log("test: real = ${row.output} network = $output")
         }
+        logger?.log("errors = $errors accuracy = ${1f - errors.toFloat() / dataset.rows.size}")
         return 1f - errors.toFloat() / dataset.rows.size
     }
 
