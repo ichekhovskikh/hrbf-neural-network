@@ -1,6 +1,6 @@
 package com.chekh.network.math.matrix
 
-internal data class Matrix(private var matrix: MutableList<MutableList<Double>>) {
+data class Matrix(private var matrix: MutableList<MutableList<Double>>) {
     val rowSize = matrix.size
     val columnSize = matrix.first().size
 
@@ -34,9 +34,19 @@ internal data class Matrix(private var matrix: MutableList<MutableList<Double>>)
         return result
     }
 
+    fun copy(): Matrix {
+        val result = Matrix(rowSize, columnSize)
+        for (i in 0 until rowSize) {
+            for (j in 0 until columnSize) {
+                result[i, j] = this[i, j]
+            }
+        }
+        return result
+    }
+
     fun single() = matrix.first().first()
 
-    fun toList(row: Int) = matrix[row]
+    fun toList(rowIndex: Int) = matrix[rowIndex]
 
     fun toList() = matrix
 

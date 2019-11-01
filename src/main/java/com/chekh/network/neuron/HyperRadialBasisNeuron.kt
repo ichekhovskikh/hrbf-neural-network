@@ -1,15 +1,15 @@
 package com.chekh.network.neuron
 
 import com.chekh.network.dataset.Dataset
-import com.chekh.network.math.Functions.gaussian
+import com.chekh.network.math.CommonFunctions.gaussian
 import com.chekh.network.math.matrix.Matrix
 import com.chekh.network.math.matrix.Matrix.Companion.toMatrix
 import java.util.concurrent.ThreadLocalRandom
 
 class HyperRadialBasisNeuron(var inputSize: Int) : Neuron {
-    private val q = Matrix(inputSize, inputSize)
-    private val centers = MutableList(inputSize) { 0.0 }
-    private var weight: Double = 0.0
+    val q = Matrix(inputSize, inputSize)
+    val centers = MutableList(inputSize) { 0.0 }
+    var weight: Double = 0.0
 
     fun init(dataset: Dataset, isPositiveRandom: Boolean = true) {
         initWeight()

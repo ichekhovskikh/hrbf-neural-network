@@ -2,11 +2,16 @@ package com.chekh.network
 
 import com.chekh.network.dataset.Dataset
 import com.chekh.network.layer.HyperRadialBasisLayer
+import com.chekh.network.learning.HyperRadialBasisLearningStrategy
 
-class HyperRadialBasisNeuralNetwork(override var inputSize: Int, var neuronSize: Int) : NeuralNetwork {
+class HyperRadialBasisNeuralNetwork(
+    override var inputSize: Int,
+    var neuronSize: Int,
+    var learningStrategy: HyperRadialBasisLearningStrategy
+) : NeuralNetwork {
 
     override val outputSize = OUTPUT_SIZE
-    private val radialBasisLayer = HyperRadialBasisLayer(inputSize, neuronSize)
+    val radialBasisLayer = HyperRadialBasisLayer(inputSize, neuronSize)
     private var hasInitialized = false
 
     override fun retrain(dataset: Dataset, epoch: Int, learningRate: Double) {
@@ -16,9 +21,7 @@ class HyperRadialBasisNeuralNetwork(override var inputSize: Int, var neuronSize:
 
     override fun train(dataset: Dataset, epoch: Int, learningRate: Double) {
         initializeIfNeed(dataset)
-        for (index in 0 until epoch) {
-            // TODO train
-        }
+        learningStrategy.train(this, dataset, epoch, learningRate)
     }
 
     override fun test(dataset: Dataset, accuracyDelta: Double): Float {

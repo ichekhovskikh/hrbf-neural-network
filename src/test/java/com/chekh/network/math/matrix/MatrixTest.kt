@@ -3,6 +3,7 @@ package com.chekh.network.math.matrix
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class MatrixTest {
     private lateinit var matrix: Matrix
@@ -52,5 +53,12 @@ class MatrixTest {
             )
         )
         assertEquals(matrix * otherMatrix, result)
+    }
+
+    @Test
+    fun matrix_copy_test() {
+        val result = matrix.copy()
+        matrix[0, 0] = 0.0
+        assertNotEquals(matrix, result)
     }
 }

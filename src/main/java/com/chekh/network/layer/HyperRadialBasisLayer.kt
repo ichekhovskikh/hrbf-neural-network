@@ -5,8 +5,8 @@ import com.chekh.network.neuron.HyperRadialBasisNeuron
 import java.util.concurrent.ThreadLocalRandom
 
 class HyperRadialBasisLayer(var inputSize: Int, var neuronSize: Int) : Layer {
-    private val neurons = List(neuronSize) { HyperRadialBasisNeuron(inputSize) }
-    private var bias = 0.0
+    val neurons = List(neuronSize) { HyperRadialBasisNeuron(inputSize) }
+    var bias = 0.0
 
     fun init(dataset: Dataset) {
         bias = ThreadLocalRandom.current().nextDouble()
